@@ -1,11 +1,23 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 import "./Weather.css";
 
-export default function Weather() {
-    const apiKey = "203da696788c9b8d29dc0497010394bf";
-    let city = "London"
-    let apiURl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&metric=units`
-    return (
+export default function Weather(props) {
+    const [weatherData, setWeatherData] = useState({ ready: false });
+    function showForecast(response){
+        setWeatherData ({
+            ready: true,
+            temperature: response.data.main.temp,
+            wind: response.data.wind.speed,
+            city: response.data.name,
+            humidity: response.data.main.humidity,
+            description: response.data.weather[0].description,
+            icon: response.data.weather[0].icon,
+        });
+    }
+
+    if (weatherData.ready) {
+ return (
     <div className="Weather">  
         <div class="container">
          <div class="form">
@@ -32,17 +44,17 @@ export default function Weather() {
         </div>
       <div class="row">
         <div class="col-6">
-          <img src="" class="main-img" alt="weather-icon" id="main-icon" />
+          <img src={`https://openweathermap.org/img/wn/${weatherData.icon}@2x.png`} class="main-img" alt="weather-icon" id="main-icon" />
         </div>
         <div class="col-6">
           <h1>
-            <span id="degrees">88</span>
+            <span id="degrees">{Math.round(weatherData.temperature)}</span>
             <span id="temperature"><a href=" " class="active" id="celsius">°C</a> | <a href=" " id="fahrenheit">°F</a></span>
           </h1>
-          <h3 id="city">Los Angeles</h3>
-          <h3 id="date">Friday, 11:45am</h3>
-          <h3 id="weather">Sunny</h3>
-          <h3 id="humidity">Humidity: 10%</h3>
+          <h3 id="city">{weatherData.city}</h3>
+          <h3 id="date">{weatherData.date}</h3>
+          <h3 id="weather" className="text-capitalize">{weatherData.description}</h3>
+          <h3 id="humidity">Humidity: {weatherData.humidity}%</h3>
         </div>
       <div class="row days" id="forecast">
       </div>
@@ -50,4 +62,12 @@ export default function Weather() {
     </div>
  </div>
 );
+} else {
+    const apiKey = "203da696788c9b8d29dc0497010394bf";
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${props.defaultCity}&appid=${apiKey}&units=metric`;
+    axios.get(apiUrl).then(showForecast);
+
+    return "Loading...";
+    }
+   
 }
