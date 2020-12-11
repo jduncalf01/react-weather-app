@@ -34,7 +34,7 @@ export default function Weather() {
         <div class="col-6">
           <h1>
             <span id="degrees">88</span>
-            <span id="temperature"><a href="#" class="active" id="celsius">°C</a> | <a href="#" id="fahrenheit">°F</a></span>
+            <span id="temperature"><a href=" " class="active" id="celsius">°C</a> | <a href=" " id="fahrenheit">°F</a></span>
           </h1>
           <h3 id="city">Los Angeles</h3>
           <h3 id="date">Friday, 11:45am</h3>
